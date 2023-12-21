@@ -1,20 +1,21 @@
 class Card {
   constructor(isWinningCard) {
-    this.node = document.createElement("button");
-    this.node.style.height = "200px";
-    this.node.style.width = "100px";
-    this.node.innerText = "두근두근";
-
+    this.node = this.createCardElement();
     this.isWinningCard = isWinningCard;
-
     this.handleCardClick();
   }
 
+  createCardElement() {
+    const button = document.createElement("button");
+    button.style.height = "200px";
+    button.style.width = "100px";
+    button.innerText = "두근두근";
+    return button;
+  }
+
   selectCard() {
-    if (this.isWinningCard) {
-      document.querySelector("#contents").innerText = "당첨입니다 :D";
-    }
-    document.querySelector("#contents").innerText = "꽝입니다!";
+    const contents = document.querySelector("#contents");
+    contents.innerText = this.isWinningCard ? "당첨입니다 :D" : "꽝입니다!";
   }
 
   handleCardClick() {
@@ -26,16 +27,21 @@ class Card {
 
 class Cards {
   constructor(count) {
+    this.cardList = [];
     this.createCards(count);
     this.shuffle();
   }
 
   createCards(count) {
-    if (count < 2) alert("하나 이상의 카드를 입력해주세요.");
+    if (count < 2) {
+      alert("하나 이상의 카드를 입력해주세요.");
+      return;
+    }
 
-    this.cardList = new Array(count - 1).fill(0).map(() => new Card(false));
+    this.cardList = Array.from({ length: count - 1 }, () => new Card(false));
     this.cardList.push(new Card(true));
   }
+
   shuffle() {
     this.cardList.sort(() => Math.random() - 0.5);
   }
@@ -43,6 +49,7 @@ class Cards {
 
 const cards = new Cards(5);
 
+const contentsElement = document.querySelector("#contents");
 cards.cardList.forEach((card) => {
-  document.querySelector("#contents").appendChild(card.node);
+  contentsElement.appendChild(card.node);
 });
