@@ -1,7 +1,8 @@
 class Card {
-  constructor(isWinningCard) {
+  constructor(isWinningCard, position) {
     this.node = this.createCardElement();
     this.isWinningCard = isWinningCard;
+    this.position = position;
     this.handleCardClick();
   }
 
@@ -15,7 +16,15 @@ class Card {
 
   selectCard() {
     const contents = document.querySelector("#contents");
-    contents.innerText = this.isWinningCard ? "당첨입니다 :D" : "꽝입니다!";
+    if (this.isWinningCard) {
+      contents.innerText = `당첨입니다 :D 당첨 카드는 ${
+        this.position + 1
+      }번째 카드입니다.`;
+    } else {
+      contents.innerText = `꽝입니다! 당첨 카드는 ${
+        this.position + 1
+      }번째 카드였습니다.`;
+    }
   }
 
   handleCardClick() {
@@ -38,8 +47,11 @@ class Cards {
       return;
     }
 
-    this.cardList = Array.from({ length: count - 1 }, () => new Card(false));
-    this.cardList.push(new Card(true));
+    this.cardList = Array.from(
+      { length: count - 1 },
+      (_, index) => new Card(false, index)
+    );
+    this.cardList.push(new Card(true, count - 1));
   }
 
   shuffle() {
