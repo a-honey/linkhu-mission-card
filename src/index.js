@@ -1,31 +1,31 @@
 class Card {
-  constructor(isWinningCard, position, resetCallback) {
-    this.node = this.createCardElement();
+  constructor(isWinningCard, position, resetCallback, cardsInstance) {
+    this.node = this.createCardElement("두근두근");
     this.isWinningCard = isWinningCard;
+    this.cardsInstance = cardsInstance;
     this.position = position;
     this.handleCardClick();
     this.resetCallback = resetCallback;
   }
 
-  createCardElement() {
+  createCardElement(text) {
     const button = document.createElement("button");
     button.style.height = "200px";
     button.style.width = "100px";
-    button.innerText = "두근두근";
+    button.innerText = text;
     return button;
   }
 
   selectCard() {
     const contents = document.querySelector("#contents");
-    if (this.isWinningCard) {
-      contents.innerText = `당첨입니다 :D 당첨 카드는 ${
-        this.position + 1
-      }번째 카드입니다.`;
-    } else {
-      contents.innerText = `꽝입니다! 당첨 카드는 ${
-        this.position + 1
-      }번째 카드였습니다.`;
-    }
+    contents.innerHTML = "";
+
+    this.cardsInstance.cardList.forEach((card, index) => {
+      const resultCard = this.createCardElement(
+        card.isWinningCard ? "당첨" : "꽝"
+      );
+      contents.appendChild(resultCard);
+    });
 
     const resetButton = document.createElement("button");
     resetButton.innerText = "다시 하기";
@@ -56,13 +56,13 @@ class Cards {
 
     this.cardList = Array.from(
       { length: count - 1 },
-      (_, index) => new Card(false, index, () => this.resetGame())
+      (_, index) => new Card(false, index, () => this.resetGame(), this)
     );
-    this.cardList.push(new Card(true, count - 1, () => this.resetGame()));
+    this.cardList.push(new Card(true, count - 1, () => this.resetGame(), this));
   }
 
   shuffle() {
-    this.cardList.sort(() => Math.random() - 0.5);
+    this.cardList = this.cardList.sort(() => Math.random() - 0.5);
   }
 
   resetGame() {
