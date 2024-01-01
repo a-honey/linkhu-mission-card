@@ -1,14 +1,17 @@
 class Card {
-  constructor(isWinningCard, position, resetCallback, cardsInstance) {
+  private node: HTMLButtonElement;
+
+  constructor(
+    private isWinningCard: boolean,
+    private position: number,
+    private resetCallback: () => void,
+    private cardsInstance: Cards
+  ) {
     this.node = this.createCardElement("두근두근");
-    this.isWinningCard = isWinningCard;
-    this.cardsInstance = cardsInstance;
-    this.position = position;
     this.handleCardClick();
-    this.resetCallback = resetCallback;
   }
 
-  createCardElement(text) {
+  private createCardElement(text: string): HTMLButtonElement {
     const button = document.createElement("button");
     button.style.height = "200px";
     button.style.width = "100px";
@@ -16,8 +19,8 @@ class Card {
     return button;
   }
 
-  selectCard() {
-    const contents = document.querySelector("#contents");
+  private selectCard(): void {
+    const contents = document.querySelector("#contents") as HTMLElement;
     contents.innerHTML = "";
 
     this.cardsInstance.cardList.forEach((card, index) => {
@@ -34,11 +37,15 @@ class Card {
     contents.appendChild(resetButton);
   }
 
-  handleCardClick() {
+  private handleCardClick(): void {
     this.node.addEventListener("click", () => {
       this.selectCard();
     });
   }
+}
+
+interface Cards {
+  cardList: Card[];
 }
 
 export default Card;
