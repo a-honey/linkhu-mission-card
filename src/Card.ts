@@ -11,6 +11,10 @@ class Card {
     this.handleCardClick();
   }
 
+  getNode(): HTMLButtonElement {
+    return this.node;
+  }
+
   private createCardElement(text: string): HTMLButtonElement {
     const button = document.createElement("button");
     button.style.height = "200px";
